@@ -271,19 +271,3 @@ npm run dev
 ### Redirect goes to `/not-found`
 - The short ID does not exist (or link was mistyped)
 - The redirect controller falls back to frontend `/not-found`
-
----
-
-## Future Improvements
-
-- Add Docker Compose for one-command full stack startup
-- Add backend integration tests for auth + url flows
-- Add frontend E2E tests (Playwright/Cypress)
-- Add analytics (click counts, last access time)
-- Add custom domain support
-
----
-
-## License
-
-Add your preferred license (MIT/Apache-2.0/etc.) to make usage terms explicit.
