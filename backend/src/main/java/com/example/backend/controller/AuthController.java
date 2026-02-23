@@ -26,6 +26,8 @@ public class AuthController {
     private static final String refreshToken = "refreshToken";
     private static final String setCookie = "Set-Cookie";
 
+    private static final long refreshMaxAge = 7 * 60 * 60 * 24;
+    private static final long accessMaxAge = 15 * 60;
 
     @GetMapping("/login")
 
@@ -38,7 +40,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
-                .maxAge(15 * 60)
+                .maxAge(accessMaxAge)
                 .sameSite("Lax")
                 .build();
 
@@ -46,7 +48,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
-                .maxAge(7 * 60 * 60 * 24)
+                .maxAge(refreshMaxAge)
                 .sameSite("Lax")
                 .build();
 
@@ -66,7 +68,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
-                .maxAge(15 * 60)
+                .maxAge(accessMaxAge)
                 .sameSite("Lax")
                 .build();
 
@@ -74,7 +76,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
-                .maxAge(7 * 60 * 60 * 24)
+                .maxAge(refreshMaxAge)
                 .sameSite("Lax")
                 .build();
 
@@ -131,7 +133,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
-                .maxAge(15 * 60)
+                .maxAge(accessMaxAge)
                 .sameSite("Lax")
                 .build();
 
@@ -139,7 +141,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
-                .maxAge(7 * 60 * 60 * 24)
+                .maxAge(refreshMaxAge)
                 .sameSite("Lax")
                 .build();
 
