@@ -29,9 +29,10 @@ jobs:
 
       - name: Build and analyze
         working-directory: backend
-        run: mvn clean verify sonar:sonar \
-          -Dsonar.projectKey=Rudransh421_Url-personal-shortner \
-          -Dsonar.organization=rudransh421 \
-          -Dsonar.host.url=https://sonarcloud.io
+        run: |
+          mvn clean verify sonar:sonar \
+            -Dsonar.projectKey=Rudransh421_Url-personal-shortner \
+            -Dsonar.organization=rudransh421 \
+            -Dsonar.host.url=https://sonarcloud.io
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
