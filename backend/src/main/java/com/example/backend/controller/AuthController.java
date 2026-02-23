@@ -7,6 +7,7 @@ import com.example.backend.dto.response.GetUserResponse;
 import com.example.backend.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    
+    @Value("${app.cookie.secure}")
+    private boolean secureCookie;
     private final AuthService authService;
 
     @PostMapping("/register")
@@ -27,7 +29,7 @@ public class AuthController {
 
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", authResponse.accessToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(15 * 60)
                 .sameSite("Lax")
@@ -35,7 +37,7 @@ public class AuthController {
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.refreshToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(7 * 60 * 60 * 24)
                 .sameSite("Lax")
@@ -55,7 +57,7 @@ public class AuthController {
 
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", authResponse.accessToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(15 * 60)
                 .sameSite("Lax")
@@ -63,7 +65,7 @@ public class AuthController {
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.refreshToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(7 * 60 * 60 * 24)
                 .sameSite("Lax")
@@ -86,14 +88,14 @@ public class AuthController {
 
         ResponseCookie accessDelete = ResponseCookie.from("accessToken", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(0)
                 .build();
 
         ResponseCookie refreshDelete = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(0)
                 .build();
@@ -120,7 +122,7 @@ public class AuthController {
 
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", res.accessToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(15 * 60)
                 .sameSite("Lax")
@@ -128,7 +130,7 @@ public class AuthController {
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", res.refreshToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(7 * 60 * 60 * 24)
                 .sameSite("Lax")
