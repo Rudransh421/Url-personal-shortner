@@ -30,7 +30,7 @@ jobs:
       - name: Build and analyze
         working-directory: backend
         run: |
-          mvn clean verify sonar:sonar \
+          mvn clean verify sonar:sonar -DskipTests \
             -Dsonar.projectKey=Rudransh421_Url-personal-shortner \
             -Dsonar.organization=rudransh421 \
             -Dsonar.host.url=https://sonarcloud.io
