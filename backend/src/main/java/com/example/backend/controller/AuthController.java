@@ -22,12 +22,19 @@ public class AuthController {
     private boolean secureCookie;
     private final AuthService authService;
 
+    private static final String accessToken = "accessToken";
+    private static final String refreshToken = "refreshToken";
+    private static final String setCookie = "Set-Cookie";
+
+
+    @GetMapping("/login")
+
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest req, HttpServletResponse response) {
 
         AuthResponse authResponse = authService.register(req);
 
-        ResponseCookie accessCookie = ResponseCookie.from("accessToken", authResponse.accessToken())
+        ResponseCookie accessCookie = ResponseCookie.from(accessToken, authResponse.accessToken())
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
@@ -35,7 +42,7 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.refreshToken())
+        ResponseCookie refreshCookie = ResponseCookie.from(refreshToken, authResponse.refreshToken())
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
@@ -43,8 +50,8 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        response.addHeader("Set-Cookie", accessCookie.toString());
-        response.addHeader("Set-Cookie", refreshCookie.toString());
+        response.addHeader(setCookie, accessCookie.toString());
+        response.addHeader(setCookie, refreshCookie.toString());
 
         return ResponseEntity.ok(authResponse);
 
@@ -55,7 +62,7 @@ public class AuthController {
 
         AuthResponse authResponse = authService.login(req);
 
-        ResponseCookie accessCookie = ResponseCookie.from("accessToken", authResponse.accessToken())
+        ResponseCookie accessCookie = ResponseCookie.from(accessToken, authResponse.accessToken())
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
@@ -63,7 +70,7 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.refreshToken())
+        ResponseCookie refreshCookie = ResponseCookie.from(refreshToken, authResponse.refreshToken())
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
@@ -71,8 +78,8 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        response.addHeader("Set-Cookie", accessCookie.toString());
-        response.addHeader("Set-Cookie", refreshCookie.toString());
+        response.addHeader(setCookie, accessCookie.toString());
+        response.addHeader(setCookie, refreshCookie.toString());
 
         return ResponseEntity.ok(authResponse);
 
@@ -80,28 +87,28 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
-            @CookieValue(name = "refreshToken", required = false) String refreshToken,
+            @CookieValue(name = refreshToken, required = false) String refreshToken,
             HttpServletResponse response
     ) {
 
         authService.logout(refreshToken);
 
-        ResponseCookie accessDelete = ResponseCookie.from("accessToken", "")
+        ResponseCookie accessDelete = ResponseCookie.from(accessToken, "")
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
                 .maxAge(0)
                 .build();
 
-        ResponseCookie refreshDelete = ResponseCookie.from("refreshToken", "")
+        ResponseCookie refreshDelete = ResponseCookie.from(refreshToken, "")
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
                 .maxAge(0)
                 .build();
 
-        response.addHeader("Set-Cookie", accessDelete.toString());
-        response.addHeader("Set-Cookie", refreshDelete.toString());
+        response.addHeader(setCookie, accessDelete.toString());
+        response.addHeader(setCookie, refreshDelete.toString());
 
         return ResponseEntity.noContent().build();
     }
@@ -116,11 +123,11 @@ public class AuthController {
 
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@CookieValue(name = "refreshToken") String refreshToken, HttpServletResponse response) {
+    public ResponseEntity<AuthResponse> refresh(@CookieValue(name = refreshToken) String refreshToken, HttpServletResponse response) {
 
         AuthResponse res = authService.refreshAccessToken(refreshToken);
 
-        ResponseCookie accessCookie = ResponseCookie.from("accessToken", res.accessToken())
+        ResponseCookie accessCookie = ResponseCookie.from(accessToken, res.accessToken())
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
@@ -128,7 +135,7 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", res.refreshToken())
+        ResponseCookie refreshCookie = ResponseCookie.from(refreshToken, res.refreshToken())
                 .httpOnly(true)
                 .secure(secureCookie)
                 .path("/")
@@ -136,8 +143,8 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        response.addHeader("Set-Cookie", accessCookie.toString());
-        response.addHeader("Set-Cookie", refreshCookie.toString());
+        response.addHeader(setCookie, accessCookie.toString());
+        response.addHeader(setCookie, refreshCookie.toString());
 
         return ResponseEntity.ok(res);
     }
