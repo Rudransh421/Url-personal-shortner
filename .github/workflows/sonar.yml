@@ -18,7 +18,7 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: "temurin"
           java-version: 21
 
       - name: Cache SonarCloud packages
@@ -28,6 +28,10 @@ jobs:
           key: ${{ runner.os }}-sonar
 
       - name: Build and analyze
-        run: mvn clean verify sonar:sonar
+        working-directory: backend
+        run: mvn clean verify sonar:sonar \
+          -Dsonar.projectKey=Rudransh421_Url-personal-shortner \
+          -Dsonar.organization=rudransh421 \
+          -Dsonar.host.url=https://sonarcloud.io
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
