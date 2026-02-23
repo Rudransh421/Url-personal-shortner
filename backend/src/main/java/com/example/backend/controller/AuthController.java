@@ -7,6 +7,7 @@ import com.example.backend.dto.response.GetUserResponse;
 import com.example.backend.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,31 +18,42 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    @Value("${app.cookie.secure}")
+    private boolean secureCookie;
     private final AuthService authService;
+
+    private static final String accessToken = "accessToken";
+    private static final String refreshToken = "refreshToken";
+    private static final String setCookie = "Set-Cookie";
+
+    private static final long refreshMaxAge = 7 * 60 * 60 * 24;
+    private static final long accessMaxAge = 15 * 60;
+
+    @GetMapping("/login")
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest req, HttpServletResponse response) {
 
         AuthResponse authResponse = authService.register(req);
 
-        ResponseCookie accessCookie = ResponseCookie.from("accessToken", authResponse.accessToken())
+        ResponseCookie accessCookie = ResponseCookie.from(accessToken, authResponse.accessToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
-                .maxAge(15 * 60)
+                .maxAge(accessMaxAge)
                 .sameSite("Lax")
                 .build();
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.refreshToken())
+        ResponseCookie refreshCookie = ResponseCookie.from(refreshToken, authResponse.refreshToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
-                .maxAge(7 * 60 * 60 * 24)
+                .maxAge(refreshMaxAge)
                 .sameSite("Lax")
                 .build();
 
-        response.addHeader("Set-Cookie", accessCookie.toString());
-        response.addHeader("Set-Cookie", refreshCookie.toString());
+        response.addHeader(setCookie, accessCookie.toString());
+        response.addHeader(setCookie, refreshCookie.toString());
 
         return ResponseEntity.ok(authResponse);
 
@@ -52,24 +64,24 @@ public class AuthController {
 
         AuthResponse authResponse = authService.login(req);
 
-        ResponseCookie accessCookie = ResponseCookie.from("accessToken", authResponse.accessToken())
+        ResponseCookie accessCookie = ResponseCookie.from(accessToken, authResponse.accessToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
-                .maxAge(15 * 60)
+                .maxAge(accessMaxAge)
                 .sameSite("Lax")
                 .build();
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.refreshToken())
+        ResponseCookie refreshCookie = ResponseCookie.from(refreshToken, authResponse.refreshToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
-                .maxAge(7 * 60 * 60 * 24)
+                .maxAge(refreshMaxAge)
                 .sameSite("Lax")
                 .build();
 
-        response.addHeader("Set-Cookie", accessCookie.toString());
-        response.addHeader("Set-Cookie", refreshCookie.toString());
+        response.addHeader(setCookie, accessCookie.toString());
+        response.addHeader(setCookie, refreshCookie.toString());
 
         return ResponseEntity.ok(authResponse);
 
@@ -83,22 +95,22 @@ public class AuthController {
 
         authService.logout(refreshToken);
 
-        ResponseCookie accessDelete = ResponseCookie.from("accessToken", "")
+        ResponseCookie accessDelete = ResponseCookie.from(accessToken, "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(0)
                 .build();
 
-        ResponseCookie refreshDelete = ResponseCookie.from("refreshToken", "")
+        ResponseCookie refreshDelete = ResponseCookie.from(refreshToken, "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
                 .maxAge(0)
                 .build();
 
-        response.addHeader("Set-Cookie", accessDelete.toString());
-        response.addHeader("Set-Cookie", refreshDelete.toString());
+        response.addHeader(setCookie, accessDelete.toString());
+        response.addHeader(setCookie, refreshDelete.toString());
 
         return ResponseEntity.noContent().build();
     }
@@ -117,24 +129,24 @@ public class AuthController {
 
         AuthResponse res = authService.refreshAccessToken(refreshToken);
 
-        ResponseCookie accessCookie = ResponseCookie.from("accessToken", res.accessToken())
+        ResponseCookie accessCookie = ResponseCookie.from(accessToken, res.accessToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
-                .maxAge(15 * 60)
+                .maxAge(accessMaxAge)
                 .sameSite("Lax")
                 .build();
 
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", res.refreshToken())
+        ResponseCookie refreshCookie = ResponseCookie.from(refreshToken, res.refreshToken())
                 .httpOnly(true)
-                .secure(false)
+                .secure(secureCookie)
                 .path("/")
-                .maxAge(7 * 60 * 60 * 24)
+                .maxAge(refreshMaxAge)
                 .sameSite("Lax")
                 .build();
 
-        response.addHeader("Set-Cookie", accessCookie.toString());
-        response.addHeader("Set-Cookie", refreshCookie.toString());
+        response.addHeader(setCookie, accessCookie.toString());
+        response.addHeader(setCookie, refreshCookie.toString());
 
         return ResponseEntity.ok(res);
     }
