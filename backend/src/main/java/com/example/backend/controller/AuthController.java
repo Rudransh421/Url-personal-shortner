@@ -29,8 +29,6 @@ public class AuthController {
     private static final long refreshMaxAge = 7 * 60 * 60 * 24;
     private static final long accessMaxAge = 15 * 60;
 
-    @GetMapping("/login")
-
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest req, HttpServletResponse response) {
 
